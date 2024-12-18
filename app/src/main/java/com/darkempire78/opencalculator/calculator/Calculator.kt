@@ -1,5 +1,6 @@
 package com.darkempire78.opencalculator.calculator
 
+import android.os.Build
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.math.MathContext
@@ -95,10 +96,10 @@ class Calculator(
                 if (value < BigDecimal.ZERO && decimalPart != BigDecimal.ZERO) {
                     require_real_number = true
                 } // the factor is NOT a float
-                else if (parseFactor > BigDecimal.ZERO) {
+                else if (parseFactor >= BigDecimal.ZERO) {
 
                     // To support bigdecimal exponent (e.g: 3.5)
-                    value = value.pow(intPart, MathContext.DECIMAL64)
+                    value = value.pow(intPart)
                         .multiply(
                             BigDecimal.valueOf(
                                 value.toDouble().pow(decimalPart.toDouble())
@@ -113,7 +114,7 @@ class Calculator(
                     }
                 } else {
                     // To support negative factor
-                    value = value.pow(-intPart, MathContext.DECIMAL64)
+                    value = value.pow(-intPart)
                         .multiply(
                             BigDecimal.valueOf(
                                 value.toDouble().pow(-decimalPart.toDouble())
@@ -121,7 +122,7 @@ class Calculator(
                         )
 
                     value = try {
-                        BigDecimal.ONE.divide(x)
+                        BigDecimal.ONE.divide(value)
                     } catch (e: ArithmeticException) {
                         // if the result is a non-terminating decimal expansion
                         BigDecimal.ONE.divide(value, numberPrecision, RoundingMode.HALF_DOWN)
@@ -240,7 +241,14 @@ class Calculator(
                     when (func) {
                         "sqrt" -> {
                             if (x >= BigDecimal.ZERO) {
-                                x = BigDecimal(sqrt(x.toDouble()))
+                                /* Uses new API if available but prevents crash if number exceeds double limit
+                                   by throwing a domain error. The new API can handle larger numbers
+                                 */
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                                    x = x.sqrt(MathContext(512)) // precision = 512
+                                else
+                                    if (x <= Double.MAX_VALUE.toBigDecimal()) x = BigDecimal(sqrt(x.toDouble()))
+                                    else domain_error = true
                             } else {
                                 require_real_number = true
                             }
@@ -273,7 +281,7 @@ class Calculator(
                             } else {
                                 x = sin(x.toDouble()).toBigDecimal()
                             }
-                            if (x > BigDecimal.ZERO && x < BigDecimal(1.0E-14)) {
+                            if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
                                 x = round(x.toDouble()).toBigDecimal()
                             }
                         }
@@ -283,7 +291,7 @@ class Calculator(
                             } else {
                                 x = cos(x.toDouble()).toBigDecimal()
                             }
-                            if (x > BigDecimal.ZERO && x < BigDecimal(1.0E-14)) {
+                            if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
                                 x = round(x.toDouble()).toBigDecimal()
                             }
                         }
@@ -298,7 +306,7 @@ class Calculator(
                                 } else {
                                     tan(x.toDouble()).toBigDecimal()
                                 }
-                                if (x > BigDecimal.ZERO && x < BigDecimal(1.0E-14)) {
+                                if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
                                     x = round(x.toDouble()).toBigDecimal()
                                 }
                             }
@@ -313,7 +321,7 @@ class Calculator(
                                 } else {
                                     asin(x.toDouble()).toBigDecimal()
                                 }
-                                if (x > BigDecimal.ZERO && x < BigDecimal(1.0E-14)) {
+                                if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
                                     x = round(x.toDouble()).toBigDecimal()
                                 }
                             }
@@ -328,7 +336,7 @@ class Calculator(
                                 } else {
                                     acos(x.toDouble()).toBigDecimal()
                                 }
-                                if (x > BigDecimal.ZERO && x < BigDecimal(1.0E-14)) {
+                                if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
                                     x = round(x.toDouble()).toBigDecimal()
                                 }
                             }
@@ -340,7 +348,7 @@ class Calculator(
                             } else {
                                 atan(x.toDouble()).toBigDecimal()
                             }
-                            if (x > BigDecimal.ZERO && x < BigDecimal(1.0E-14)) {
+                            if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
                                 x = round(x.toDouble()).toBigDecimal()
                             }
                         }
