@@ -89,8 +89,10 @@ class Calculator(
             value = BigDecimal.ZERO
         } else {
             if (parseFactor >= BigDecimal(10000)) {
-                is_infinity = true
-                value = BigDecimal.ZERO
+                if (value != BigDecimal.ONE && value != -BigDecimal.ONE) is_infinity = true
+                if (value == BigDecimal.ONE) value = BigDecimal.ONE
+                if (value == -BigDecimal.ONE) value = if (parseFactor % BigDecimal(2) == BigDecimal.ZERO) BigDecimal.ONE else -BigDecimal.ONE
+                if (value != BigDecimal.ONE && value != -BigDecimal.ONE) value = BigDecimal.ZERO
             } else {
                 // If the number is negative and the factor is a float ( e.g : (-5)^0.5 )
                 if (value < BigDecimal.ZERO && decimalPart != BigDecimal.ZERO) {
