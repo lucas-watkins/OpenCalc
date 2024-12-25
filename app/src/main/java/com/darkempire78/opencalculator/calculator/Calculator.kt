@@ -292,7 +292,7 @@ class Calculator(
                                 x = sin(x.toDouble()).toBigDecimal()
                             }
                             if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
-                                x = round(x.toDouble()).toBigDecimal()
+                                x = BigDecimal.ZERO
                             }
                         }
                         "cos" -> {
@@ -302,7 +302,7 @@ class Calculator(
                                 x = cos(x.toDouble()).toBigDecimal()
                             }
                             if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
-                                x = round(x.toDouble()).toBigDecimal()
+                                x = BigDecimal.ZERO
                             }
                         }
                         "tan" -> {
@@ -317,7 +317,7 @@ class Calculator(
                                     tan(x.toDouble()).toBigDecimal()
                                 }
                                 if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
-                                    x = round(x.toDouble()).toBigDecimal()
+                                    x = BigDecimal.ZERO
                                 }
                             }
                         }
@@ -332,7 +332,7 @@ class Calculator(
                                     asin(x.toDouble()).toBigDecimal()
                                 }
                                 if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
-                                    x = round(x.toDouble()).toBigDecimal()
+                                    x = BigDecimal.ZERO
                                 }
                             }
                         }
@@ -347,7 +347,7 @@ class Calculator(
                                     acos(x.toDouble()).toBigDecimal()
                                 }
                                 if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
-                                    x = round(x.toDouble()).toBigDecimal()
+                                    x = BigDecimal.ZERO
                                 }
                             }
 
@@ -359,7 +359,7 @@ class Calculator(
                                 atan(x.toDouble()).toBigDecimal()
                             }
                             if (x in BigDecimal(-1.0E-14)..BigDecimal(1.0E-14)) {
-                                x = round(x.toDouble()).toBigDecimal()
+                                x = BigDecimal.ZERO
                             }
                         }
                         else -> {
