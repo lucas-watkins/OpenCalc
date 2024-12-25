@@ -85,14 +85,22 @@ class Calculator(
 
         // if the number is null
         if (value == BigDecimal.ZERO) {
-            syntax_error = true
+            if (parseFactor >= BigDecimal.ZERO) return BigDecimal.ZERO
+            division_by_0 = true
             value = BigDecimal.ZERO
         } else {
             if (parseFactor >= BigDecimal(10000)) {
-                if (value != BigDecimal.ONE && value != -BigDecimal.ONE) is_infinity = true
-                if (value == BigDecimal.ONE) value = BigDecimal.ONE
-                if (value == -BigDecimal.ONE) value = if (parseFactor % BigDecimal(2) == BigDecimal.ZERO) BigDecimal.ONE else -BigDecimal.ONE
-                if (value != BigDecimal.ONE && value != -BigDecimal.ONE) value = BigDecimal.ZERO
+                if (value != BigDecimal.ONE && value != -BigDecimal.ONE)
+                {
+                    is_infinity = true
+                    value = BigDecimal.ZERO
+                }
+                else {
+                    value = when (parseFactor % BigDecimal(2)) {
+                        BigDecimal.ZERO -> BigDecimal.ONE
+                        else -> if (value == BigDecimal.ONE) BigDecimal.ONE else -BigDecimal.ONE
+                    }
+                }
             } else {
                 // If the number is negative and the factor is a float ( e.g : (-5)^0.5 )
                 if (value < BigDecimal.ZERO && decimalPart != BigDecimal.ZERO) {
