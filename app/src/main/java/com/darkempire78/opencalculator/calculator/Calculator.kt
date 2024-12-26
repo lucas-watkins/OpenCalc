@@ -132,7 +132,7 @@ class Calculator(
 
                     value = try {
                         BigDecimal.ONE.divide(value)
-                    } catch (e: ArithmeticException) {
+                    } catch (_: ArithmeticException) {
                         // if the result is a non-terminating decimal expansion
                         BigDecimal.ONE.divide(value, numberPrecision, RoundingMode.HALF_DOWN)
                     }
@@ -197,7 +197,7 @@ class Calculator(
                         } else {
                             try {
                                 x = x.divide(fractionDenominator)
-                            } catch (e: ArithmeticException) { // if the result is a non-terminating decimal expansion
+                            } catch (_: ArithmeticException) { // if the result is a non-terminating decimal expansion
                                 x = x.divide(fractionDenominator, numberPrecision, RoundingMode.HALF_DOWN)
                                 println(x)
                             }
