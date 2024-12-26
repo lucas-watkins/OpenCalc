@@ -15,7 +15,6 @@ import kotlin.math.exp
 import kotlin.math.ln
 import kotlin.math.log10
 import kotlin.math.pow
-import kotlin.math.round
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
@@ -268,14 +267,14 @@ class Calculator(
                             x = factorial(x)
                         }
                         "ln" -> {
-                            if (x <= BigDecimal.ZERO) {
+                            if (x <= BigDecimal.ZERO || x > Double.MAX_VALUE.toBigDecimal()) {
                                 domain_error = true
                             } else {
                                 x = BigDecimal(ln(x.toDouble()))
                             }
                         }
                         "logten" -> {
-                            if (x <= BigDecimal.ZERO) {
+                            if (x <= BigDecimal.ZERO || x > Double.MAX_VALUE.toBigDecimal()) {
                                 domain_error = true
                             } else {
                                 x = BigDecimal(log10(x.toDouble()))
@@ -285,7 +284,10 @@ class Calculator(
                             x = exponentiation(BigDecimal(Math.E), x)
                         }
                         "sin" -> {
-                            if (isDegreeModeActivated) {
+                            if (x > Double.MAX_VALUE.toBigDecimal()) {
+                                domain_error = true
+                            }
+                            else if (isDegreeModeActivated) {
                                 x = sin(Math.toRadians(x.toDouble())).toBigDecimal()
                                 // https://stackoverflow.com/questions/29516222/how-to-get-exact-value-of-trigonometric-functions-in-java
                             } else {
@@ -296,7 +298,10 @@ class Calculator(
                             }
                         }
                         "cos" -> {
-                            if (isDegreeModeActivated) {
+                            if (x > Double.MAX_VALUE.toBigDecimal()) {
+                                domain_error = true
+                            }
+                            else if (isDegreeModeActivated) {
                                 x = cos(Math.toRadians(x.toDouble())).toBigDecimal()
                             } else {
                                 x = cos(x.toDouble()).toBigDecimal()
@@ -306,7 +311,7 @@ class Calculator(
                             }
                         }
                         "tan" -> {
-                            if (Math.toDegrees(x.toDouble()) == 90.0) {
+                            if (Math.toDegrees(x.toDouble()) == 90.0 || x > Double.MAX_VALUE.toBigDecimal()) {
                                 // Tangent is defined for R\{(2k+1)π/2, with k ∈ Z}
                                 domain_error = true
                                 x = BigDecimal.ZERO
@@ -353,8 +358,11 @@ class Calculator(
 
                         }
                         "arcta" -> {
-                            x = if (isDegreeModeActivated) {
-                                (atan(x.toDouble()) * 180 / Math.PI).toBigDecimal()
+                            if (x > Double.MAX_VALUE.toBigDecimal()) {
+                                domain_error = true
+                            }
+                            else if (isDegreeModeActivated) {
+                                x = (atan(x.toDouble()) * 180 / Math.PI).toBigDecimal()
                             } else {
                                 atan(x.toDouble()).toBigDecimal()
                             }
