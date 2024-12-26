@@ -84,7 +84,7 @@ class Calculator(
 
         // if the number is null
         if (value == BigDecimal.ZERO) {
-            if (parseFactor >= BigDecimal.ZERO) return BigDecimal.ZERO
+            if (parseFactor >= BigDecimal.ZERO) return if (parseFactor > BigDecimal.ZERO) BigDecimal.ZERO else BigDecimal.ONE
             division_by_0 = true
             value = BigDecimal.ZERO
         } else {
