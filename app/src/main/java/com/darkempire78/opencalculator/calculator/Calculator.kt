@@ -90,7 +90,7 @@ class Calculator(
                 value = BigDecimal.ZERO
             }
             else {
-                value = when (parseFactor % BigDecimal(2)) {
+                return when (parseFactor % BigDecimal(2)) {
                     BigDecimal.ZERO -> BigDecimal.ONE
                     else -> if (value == BigDecimal.ONE) BigDecimal.ONE else -BigDecimal.ONE
                 }
@@ -252,7 +252,7 @@ class Calculator(
                                     x = x.sqrt(MathContext(512)) // precision = 512
                                 else
                                     if (x <= Double.MAX_VALUE.toBigDecimal()) x = BigDecimal(sqrt(x.toDouble()))
-                                    else domain_error = true
+                                    else is_infinity = true
                             } else {
                                 require_real_number = true
                             }

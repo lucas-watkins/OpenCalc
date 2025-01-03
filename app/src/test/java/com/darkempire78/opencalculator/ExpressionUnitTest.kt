@@ -1,10 +1,14 @@
 package com.darkempire78.opencalculator
 
 import com.darkempire78.opencalculator.calculator.Calculator
+import com.darkempire78.opencalculator.calculator.division_by_0
+import com.darkempire78.opencalculator.calculator.is_infinity
 import com.darkempire78.opencalculator.calculator.parser.Expression
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.BeforeClass
 import org.junit.Test
+import java.math.BigDecimal
 import java.text.DecimalFormatSymbols
 
 /**
@@ -105,6 +109,34 @@ class ExpressionUnitTest {
 
         result = calculate("2^-3.5", false).toDouble()
         assertEquals(0.08838834764, result, 0.0000001)
+
+        result = calculate("0^0", false).toDouble()
+        assertEquals(1.0, result, 0.0)
+
+        result = calculate("0.42^0", false).toDouble()
+        assertEquals(1.0, result, 0.0)
+
+        result = calculate("0^100000", false).toDouble()
+        assertEquals(0.0, result, 0.0)
+
+        result = calculate("1^100000", false).toDouble()
+        assertEquals(1.0, result, 0.0)
+
+        result = calculate("(-1)^100001", false).toDouble()
+        assertEquals(-1.0, result, 0.0)
+
+        result = calculate("(-5)^1.00000000000", false).toDouble()
+        assertEquals(-5.0, result, 0.0)
+
+        calculate("1^(1/sin(2*pi))", false).toDouble()
+        assertTrue(division_by_0)
+        division_by_0 = false
+
+        assertEquals(calculate("2^256", false),
+            BigDecimal("115792089237316195423570985008687907853269984665640564039457584007913129639936.0")
+        )
+
+        assertEquals(BigDecimal("1.0"), calculate("9^30 # 31", false))
     }
 
     @Test
@@ -153,6 +185,10 @@ class ExpressionUnitTest {
 
         result = calculate("√9", false).toDouble()
         assertEquals(3.0, result, 0.0)
+
+        calculate("√(2^1024)", false)
+        assertTrue(is_infinity)
+        is_infinity = false
     }
 
     @Test
@@ -193,6 +229,11 @@ class ExpressionUnitTest {
 
         result = calculate("sin(1+1)", true).toDouble()
         assertEquals(0.03489949670250097, result, 0.0)
+    }
+
+    @Test
+    fun exponent_special_cases(){
+
     }
 
     private fun calculate(input: String, isDegreeModeActivated : Boolean) = calculator.evaluate(expression.getCleanExpression(input, decimalSeparatorSymbol, groupingSeparatorSymbol), isDegreeModeActivated)
