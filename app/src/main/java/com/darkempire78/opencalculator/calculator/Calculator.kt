@@ -97,7 +97,8 @@ class Calculator(
             }
         } else {
             // If the number is negative and the factor is a float ( e.g : (-5)^0.5 )
-            if (value < BigDecimal.ZERO && decimalPart != BigDecimal.ZERO) {
+            if (value < BigDecimal.ZERO && decimalPart != BigDecimal.ZERO &&
+                decimalPart % BigDecimal.ONE !in BigDecimal(-1.0E-321)..BigDecimal(1.0E-321)){
                 require_real_number = true
             } // the factor is NOT a float
             else if (parseFactor >= BigDecimal.ZERO) {
