@@ -231,11 +231,6 @@ class ExpressionUnitTest {
         assertEquals(0.03489949670250097, result, 0.0)
     }
 
-    @Test
-    fun exponent_special_cases(){
-
-    }
-
     private fun calculate(input: String, isDegreeModeActivated : Boolean) = calculator.evaluate(expression.getCleanExpression(input, decimalSeparatorSymbol, groupingSeparatorSymbol), isDegreeModeActivated)
 
     companion object {
